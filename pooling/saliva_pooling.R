@@ -1,3 +1,6 @@
+###Created by: Anne Watkins
+###Last Updated: July 28, 2020
+
 library(reshape)
 library(scales)
 library(lmtest)
