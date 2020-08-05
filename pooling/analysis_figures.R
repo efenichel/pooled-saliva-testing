@@ -216,3 +216,87 @@ plot2insert <- ggplot() +
 
 costplot +
   annotation_custom(ggplotGrob(plot2insert), xmin = 0.10, xmax = 0.3, ymin = 11000, ymax = 28000)
+
+
+#==============================================================================
+#Tests constrained
+#Generate result data frames for prevalence 
+#pool, pop, assume.select = 0, tests = 500, other.data = pool.sen
+tc.1.10k <- test.constraint(1, 10000)
+tc.5.10k <- test.constraint(5, 10000)
+tc.10.10k <- test.constraint(10, 10000)
+tc.20.10k <- test.constraint(20, 10000)
+
+
+# tc.5.10k <- tc.5.10k %>%
+#   mutate(untested.cases = (10000 - people.tested) * prevalence) %>%
+#   mutate(pos.missed = numb.undetected.pos + untested.cases)
+# tc.10.10k <- tc.10.10k %>%
+#   mutate(untested.cases = (10000 - people.tested) * prevalence) %>%
+#   mutate(pos.missed = numb.undetected.pos + untested.cases)
+# tc.20.10k <- tc.20.10k %>%
+#   mutate(untested.cases = (10000 - people.tested) * prevalence) %>%
+#   mutate(pos.missed = numb.undetected.pos + untested.cases)
+
+
+#p.1.10k.ciu <- prev.results(1, 10000, other.data = pool.sen.ciu)
+tc.5.10k.ciu <- test.constraint(5, 10000, other.data = pool.sen.ciu)
+tc.10.10k.ciu <- test.constraint(10, 10000, other.data = pool.sen.ciu)
+tc.20.10k.ciu <- test.constraint(20, 10000, other.data = pool.sen.ciu)
+
+#p.1.10k.cil <- prev.results(1, 10000, other.data = pool.sen.ciu)
+tc.5.10k.cil <- test.constraint(5, 10000, other.data = pool.sen.cil)
+tc.10.10k.cil <- test.constraint(10, 10000, other.data = pool.sen.cil)
+tc.20.10k.cil <- test.constraint(20, 10000, other.data = pool.sen.cil)
+
+
+
+
+plot10k.missed <- ggplot() +
+  geom_line(data = tc.10.10k, aes(x = prevalence, y = pos.missed ), color = "#85c4b9", size = 1.25) +
+  geom_line(data = tc.20.10k, aes(x = prevalence, y = pos.missed), color = "#afd88d", size = 1.25) +
+  geom_line(data = tc.5.10k, aes(x = prevalence, y = pos.missed ), color = '#27496a', size = 1.25) +
+  geom_line(data = tc.10.10k.ciu, aes(x = prevalence, y = pos.missed ), color = "#85c4b9", linetype = 'dashed') +
+  geom_line(data = tc.20.10k.ciu, aes(x = prevalence, y = pos.missed), color = "#afd88d", linetype = 'dashed') + 
+  geom_line(data = tc.5.10k.ciu, aes(x = prevalence, y = pos.missed ), color = '#27496a', linetype = 'dashed') + 
+  geom_line(data = tc.10.10k.cil, aes(x = prevalence, y = pos.missed), color = "#85c4b9", linetype = 'dashed') +
+  geom_line(data = tc.20.10k.cil, aes(x = prevalence, y = pos.missed), color = "#afd88d", linetype = 'dashed') + 
+  geom_line(data = tc.5.10k.cil, aes(x = prevalence, y = pos.missed ), color = "#27496a", linetype = 'dashed') +
+  # annotate(geom="text",x=0.1, y= 62 ,label="pool = 10",color="#85c4b9",  angle = 13) +
+  # annotate(geom="text",x=0.15,y= 11 ,label="pool = 20",color="#afd88d", angle = 0) +
+  # annotate(geom="text",x=0.1 ,y= 175 ,label="pool = 5",color="#27496a", angle = 40) +
+  labs( 
+    x= "Prevalence",
+    y = "Expected number of undetected cases\n relative to using the undilluted \n test using only 2000 tests")  +
+  #ggtitle("population 10,000") +
+  theme_classic(base_size = 15) +
+  #geom_hline(yintercept = 10000, linetype = "solid", color = "red", size = 0.5) +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(0,0.1))+ 
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(0,800))
+plot10k.missed
+
+plot10k.missed.tests <- ggplot() +
+  geom_line(data = tc.10.10k, aes(x = prevalence, y = people.tested ), color = "#85c4b9", size = 1.25) +
+  geom_line(data = tc.20.10k, aes(x = prevalence, y = people.tested ), color = "#afd88d", size = 1.25) +
+  geom_line(data = tc.5.10k, aes(x = prevalence, y = people.tested  ), color = '#27496a', size = 1.25) +
+  geom_line(data = tc.10.10k.ciu, aes(x = prevalence, y = people.tested  ), color = "#85c4b9", linetype = 'dashed') +
+  geom_line(data = tc.20.10k.ciu, aes(x = prevalence, y = people.tested ), color = "#afd88d", linetype = 'dashed') + 
+  geom_line(data = tc.5.10k.ciu, aes(x = prevalence, y = people.tested  ), color = '#27496a', linetype = 'dashed') + 
+  geom_line(data = tc.10.10k.cil, aes(x = prevalence, y = people.tested ), color = "#85c4b9", linetype = 'dashed') +
+  geom_line(data = tc.20.10k.cil, aes(x = prevalence, y = people.tested ), color = "#afd88d", linetype = 'dashed') + 
+  geom_line(data = tc.5.10k.cil, aes(x = prevalence, y = people.tested ), color = "#27496a", linetype = 'dashed') +
+  # annotate(geom="text",x=0.1, y= 62 ,label="pool = 10",color="#85c4b9",  angle = 13) +
+  # annotate(geom="text",x=0.15,y= 11 ,label="pool = 20",color="#afd88d", angle = 0) +
+  # annotate(geom="text",x=0.1 ,y= 175 ,label="pool = 5",color="#27496a", angle = 40) +
+  labs( 
+    x= "Prevalence",
+    y = "People tested with a 2000 test limit ")  +
+  #ggtitle("population 10,000") +
+  theme_classic(base_size = 15) 
+#geom_hline(yintercept = 10000, linetype = "solid", color = "red", size = 0.5) +
+# scale_x_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(0,0.05)) +
+ #scale_y_continuous(breaks = scales::pretty_breaks(n = 10), limits = c(0,3000))
+plot10k.missed.tests
+
+
+

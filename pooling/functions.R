@@ -84,7 +84,7 @@ pop.results <- function(pool, prev, other.data = pool.sen ){
   return(out)
 }
 #==============================================================
-
+#loop over prevalence
 prev.results <- function(pool, pop, other.data = pool.sen ){
   sensitivity = other.data[which(pool.sen[,1]==pool),2]
   prev <- as.data.frame(seq(0.001, 0.3, by = 0.0005))
@@ -115,6 +115,104 @@ prev.results <- function(pool, pop, other.data = pool.sen ){
   
   return(out)
 }
+
+#=========================================================
+
+#adjust prevalence and population for testing constraint
+
+group.results.df <- function(pool, m, pop, sensitivity, tests){
+  tmp <- as.data.frame(t(group.results(pool,
+                                m = m,
+                                pop = pop ,
+                                sensitivity, 0)))
+  tmp <- tmp %>% mutate(total.tests = pos.groups + neg.groups + pos.peop)
+  return((unlist(tmp$total.tests)-tests)^2)
+}
+
+
+max.tests <- function(tests, pool, m, pop, sensitivity){
+  opt.out <- optim(5, group.results.df, pool = pool, m = m, sensitivity = sensitivity, tests = tests, method = "BFGS")
+  test.pop <- opt.out$par
+  tmp <- group.results(pool,
+                m = m,
+                pop = test.pop,
+                sensitivity, 0)
+  
+  return(tmp)
+}
+
+
+#fix 500 tests
+test.constraint<- function(pool, pop, assume.select = 0, tests = 2000, other.data = pool.sen ){
+  #assume.select = 0 if people are tests at random, if 1 > assume.select > 0 , this 
+  #is the % of the positives always in the test population. 
+  sensitivity = other.data[which(pool.sen[,1]==pool),2]
+  prev <- as.data.frame(seq(0.001, 0.3, by = 0.0005))
+  prev.length <- length(prev)
+  colnames(prev) <- "prevalence"
+  
+  if(assume.select == 0){
+    prev <- prev
+    untested.cases <- as.data.frame((pop/pool - tests)*prev)
+    colnames(untested.cases) <- "untested.cases"
+    test.pop <- tests*pool
+  } else {
+    #this block does not work
+    cases <- prev*pop
+    cases.selected <- assume.select * cases
+    res.cases <- ((1-assume.select) * cases)
+    res.prev <- res.cases/ (pop - cases.selected)
+    add.cases <- (tests - cases.selected) * res.prev
+    test.prev <- (cases.selected + add.cases)/tests
+  }
+  
+  out <- lapply(seq(0.001, 0.3, by = 0.0005),
+                function(X) max.tests (tests =tests,
+                                       pool,
+                                       m = X,
+                                       pop = pop,
+                                       sensitivity)
+  )
+  out<-as.data.frame(do.call("rbind", out ))
+  out <- out %>% mutate(people.tested = pos.peop + neg.peop)
+  
+  
+  prev.seq <- seq(0.001, 0.3, by = 0.0005)
+  
+  #test.popx<-unlist(rowSums(out[,1:2]))
+
+  
+  # out2 <- lapply(seq(0.001, 0.3, by = 0.0005),
+  #               function(X) group.results(pool,
+  #                                         m = prev.seq[X],
+  #                                         pop = out[X,]$people.tested,
+  #                                         sensitivity, 0)
+  # )
+
+
+
+  false.neg1 <- lapply(c(1:length(prev.seq)),
+                       function(X) group.miss(pool,
+                                              m = prev.seq[X],
+                                              pop = out[X,]$people.tested,
+                                              sensitivity, 0)[1]
+  )
+
+  out3 <- cbind(prev,
+               out,
+               do.call("rbind", false.neg1),
+               untested.cases
+  )
+
+  out3  <- out3  %>%
+    mutate(n.groups = pos.groups+neg.groups) %>%
+    mutate(total.tests = n.groups + pos.peop) %>%
+    mutate(untested.cases = (pop - people.tested) * prevalence) %>%
+    mutate(pos.missed = numb.undetected.pos + untested.cases)
+  
+  return(out3)
+}
+
 
 
 
