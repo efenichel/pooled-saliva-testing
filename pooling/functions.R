@@ -103,7 +103,7 @@ prev.results <- function(pool, pop, other.data = pool.sen ){
                                               sensitivity, 0)[1]
   )
   
-  out <- cbind(prev, 
+  out <- cbind(as.data.frame(prev), 
                do.call("rbind", out ),
                do.call("rbind", false.neg1)
   )
@@ -111,7 +111,7 @@ prev.results <- function(pool, pop, other.data = pool.sen ){
   out  <- out  %>% 
     mutate(n.groups = pos.groups+neg.groups) %>%
     mutate(total.tests = n.groups + pos.peop) %>%
-    mutate(pos.found = pop*prev - numb.undetected.pos)
+    mutate(pos.found = pop*prevalence - numb.undetected.pos)
   
   return(out)
 }
@@ -140,6 +140,8 @@ max.tests <- function(tests, pool, m, pop, sensitivity){
   
   return(tmp)
 }
+
+
 
 
 #fix 500 tests
