@@ -1,11 +1,15 @@
 ###Created by: Anne Watkins
 ###Last Updated: August 10, 2020
+if (!require("pacman")) install.packages("pacman")
+if(!require("extrafont")) install.packages("extrafont")
+p_load(reshape, scales, lmtest, sandwich)
 
-library(reshape)
-library(scales)
-library(lmtest)
-library(sandwich)
-library(extrafont)
+
+# library(reshape)
+# library(scales)
+# library(lmtest)
+# library(sandwich)
+# library(extrafont)
 #400ul
 pooling <- read.csv('./Data/pooling_n1.csv')
 pooling$ct1[which(pooling$Sample=='252 5/12')]=40 #correct issue in data
@@ -72,7 +76,7 @@ abline(0,1)
 
 
 #remove high CT values to explore data - not for use in pooled spits paper
-pooling.c.high <- pooling2.c[which(pooling2.c$ct1<=35),]
+pooling.c.high <- pooling.c2[which(pooling.c2$ct1<=35),]  
 
 mod4.h <- glm(ctp ~  ct1 +as.factor(ratio), data=pooling.c.high)
 summary(mod4.h)
@@ -234,9 +238,8 @@ legend(x='topleft',legend=p3colors$ratio,col=p3colors$color,pch=16,bty = 'n',pt.
 abline(0,1)
 #points(pooling.c$ct1,pooling.c$ctp,col=alpha(pcolors$color[match(pooling.c$ratio,pcolors$ratio)],0.6),pch=16,cex=1.25,)
 library(car)
-residualPlot(mod4.l.400)
 
-plot(mod4.1.400)
+plot(mod.d.400)
 
 #testing log % change model - not for use as makes more sense for a different audience
 mod4.l.300 <- lm(log(ctp) ~  log(ct1) +as.factor(ratio), data=pooling2.c2)
@@ -309,11 +312,11 @@ ggplot(data=impact, aes(x=cdc_n1_ct,y=n1_p20))+
 
 #REG COEF RELATIVE SENSITIVITY
 (length(which(impact$cdc_n1_ct+mod4.3.coef[1]>38))-45)/135 #7.41
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]<=38)))/135 #92.59
+s5<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]<=38)))/135 #92.59
 (length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]>38))-45)/135 #11.11
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]<=38)))/135 #88.89
+s10<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]<=38)))/135 #88.89
 (length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]>38))-45)/135 #14.81
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]<=38)))/135 #85.19
+s20<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]<=38)))/135 #85.19
 
 #UPPER LIMIT
 (length(which(impact$cdc_n1_ct+3.046>38))-45)/135 #11.11
@@ -342,7 +345,7 @@ ggplot(data=impact, aes(x=cdc_n1_ct,y=n1_p20))+
 
 
 
-library(qualityTools)
+p_load(qualityTools)
 
 
 #PBS and Water Pooling
@@ -379,7 +382,7 @@ confint(mod.me)
 
 #pooling rna
 rna<-read.csv('./data/pooling_rna.csv')
-rna<-rna[,-c(2)]
+rna<-rna[,-c(2)] #remove fresh to compare freeze thaw as unpooled
 rna.m<-melt(rna,id.vars = c('ID','Freeze.thaw'))
 rna.m$dct<-rna.m$value-rna.m$Freeze.thaw
 names(rna.m)<-c('ID','Freeze.thaw','ratio','pct','dct')

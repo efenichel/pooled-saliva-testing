@@ -142,8 +142,6 @@ max.tests <- function(tests, pool, m, pop, sensitivity){
 }
 
 
-
-
 #fix 500 tests
 test.constraint<- function(pool, pop, assume.select = 0, tests = 2000, other.data = pool.sen ){
   #assume.select = 0 if people are tests at random, if 1 > assume.select > 0 , this 
