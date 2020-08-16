@@ -1,5 +1,5 @@
 ###Created by: Anne Watkins
-###Last Updated: August 10, 2020
+###Last Updated: August 16, 2020
 if (!require("pacman")) install.packages("pacman")
 if(!require("extrafont")) install.packages("extrafont")
 p_load(reshape, scales, lmtest, sandwich)
