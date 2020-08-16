@@ -1,11 +1,15 @@
 ###Created by: Anne Watkins
 ###Last Updated: August 10, 2020
+if (!require("pacman")) install.packages("pacman")
+if(!require("extrafont")) install.packages("extrafont")
+p_load(reshape, scales, lmtest, sandwich)
 
-library(reshape)
-library(scales)
-library(lmtest)
-library(sandwich)
-library(extrafont)
+
+# library(reshape)
+# library(scales)
+# library(lmtest)
+# library(sandwich)
+# library(extrafont)
 #400ul
 pooling <- read.csv('./Data/pooling_n1.csv')
 pooling$ct1[which(pooling$Sample=='252 5/12')]=40 #correct issue in data
@@ -72,7 +76,7 @@ abline(0,1)
 
 
 #remove high CT values to explore data - not for use in pooled spits paper
-pooling.c.high <- pooling2.c[which(pooling2.c$ct1<=35),]
+pooling.c.high <- pooling2.c[which(pooling2.c$ct1<=35),]   #is this supposed to be pooling.c2?
 
 mod4.h <- glm(ctp ~  ct1 +as.factor(ratio), data=pooling.c.high)
 summary(mod4.h)
@@ -342,7 +346,7 @@ ggplot(data=impact, aes(x=cdc_n1_ct,y=n1_p20))+
 
 
 
-library(qualityTools)
+p_load(qualityTools)
 
 
 #PBS and Water Pooling
