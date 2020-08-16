@@ -135,8 +135,8 @@ pooling2.c$ratio <- as.factor(pooling2.c$ratio)
 p2colors <- data.frame(ratio=levels(pooling2.c$ratio),color=c('#27496a','#85c4b9','#afd88d'))
 p2colors$color <- as.character(p2colors$color)
 
-pcolors$ratio2<-c('1:5','1:10','1:20')
-p2colors$ratio2<-c('1:5','1:10','1:20')
+pcolors$ratio2<-c('1/5','1/10','1/20')
+p2colors$ratio2<-c('1/5','1/10','1/20')
 
 #figure 1
 #par(mfrow=c(1,2))
@@ -266,7 +266,7 @@ impact$n1_p20 <- 0
 impact$n1_p20 <- impact$cdc_n1_ct +mod4.3.coef[1]+mod4.3.coef[3]
 
 impact.c <- impact[,c(1,4,10,11,12)]
-names(impact.c) <- c('Sample.ID','Undiluted','1:5','1:10','1:20')
+names(impact.c) <- c('Sample.ID','Undiluted','1/5','1/10','1/20')
 impact.m <- melt(impact.c,id.vars = c('Sample.ID'))
 names(impact.m) <- c('Sample.ID','condition','ct')
 impact.m$colorpal<-'#ff0000'
@@ -276,12 +276,12 @@ impact.m$colorpal[which(impact.m$condition=='1:20')]<-'#fcc1c1'
 
 #sensitivity summary plot
 library(ggplot2)
-(ggplot(data=impact.m, aes(x=condition,y=ct))+ #theme(text=element_text(size=10,family='Impact'))+
-    geom_rect(aes(ymin=38,ymax=Inf,xmin=-Inf,xmax=Inf),fill='#eec2c2')+
+((ggplot(data=impact.m[which(impact.m$ct<=45),], aes(x=condition,y=ct))+ #theme(text=element_text(size=10,family='Impact'))+
+    geom_rect(aes(ymin=38,ymax=45,xmin=-Inf,xmax=Inf),fill='#eec2c2')+
     geom_dotplot(binaxis='y',stackdir='center',aes(fill=condition),alpha=0.75,stackratio = 0.75,dotsize=1,binwidth = 0.5)+
- 
+  
   stat_summary(fun.data=mean_sdl, fun.args = list(mult=1), 
-               geom="pointrange", color="black",alpha=0.75)+
+               geom="pointrange", color="black",alpha=0.75))+
   scale_y_reverse()+  
   geom_hline(yintercept = 40,linetype='dashed')+ geom_hline(yintercept = 38))+
   #scale_fill_manual(values=c('#ff0000','#ff5448','#ff7d7d','#fcc1c1'))
@@ -290,10 +290,10 @@ library(ggplot2)
   ylab('Ct value (N1)')+
   labs(fill='Pooling Ratio')+
   theme_minimal(base_size = 10,base_family = 'Arial')+
-  annotate(geom='text',x=1,y=50,label='relative sensitivity:')+
-  annotate(geom='text',x=2,y=50,label='92.59%')+#,color='#27496a')+
-  annotate(geom='text',x=3,y=50,label='88.89%')+#,color='#85c4b9')+
-  annotate(geom='text',x=4,y=50,label='85.19%')#,color='#afd88d')
+  annotate(geom='text',x=1,y=12,label='relative sensitivity:')+
+  annotate(geom='text',x=2,y=12,label='92.59%')+#,color='#27496a')+
+  annotate(geom='text',x=3,y=12,label='88.89%')+#,color='#85c4b9')+
+  annotate(geom='text',x=4,y=12,label='85.19%')#,color='#afd88d')
 
 
 
@@ -353,7 +353,7 @@ names(pbs1)<-c('sample','ct1','saliva','pbs','water')
 pbs.m<-melt(pbs1,id.vars = c('sample','ct1'))
 names(pbs.m)<-c('sample','ct1','condition','ctp')
 
-pbs.m$ctp[which(pbs.m$ctp>=42)]=42
+#pbs.m$ctp[which(pbs.m$ctp>=42)]=42
 
 pbs.m$condition<-as.factor(pbs.m$condition)
 pbs.m$ctp[which(pbs.m$ctp>40)] <- 40
