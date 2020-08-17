@@ -1,5 +1,5 @@
 ###Created by: Anne Watkins
-###Last Updated: August 10, 2020
+###Last Updated: August 16, 2020
 if (!require("pacman")) install.packages("pacman")
 if(!require("extrafont")) install.packages("extrafont")
 p_load(reshape, scales, lmtest, sandwich)
@@ -76,7 +76,7 @@ abline(0,1)
 
 
 #remove high CT values to explore data - not for use in pooled spits paper
-pooling.c.high <- pooling2.c[which(pooling2.c$ct1<=35),]   #is this supposed to be pooling.c2?
+pooling.c.high <- pooling.c2[which(pooling.c2$ct1<=35),]  
 
 mod4.h <- glm(ctp ~  ct1 +as.factor(ratio), data=pooling.c.high)
 summary(mod4.h)
@@ -139,8 +139,8 @@ pooling2.c$ratio <- as.factor(pooling2.c$ratio)
 p2colors <- data.frame(ratio=levels(pooling2.c$ratio),color=c('#27496a','#85c4b9','#afd88d'))
 p2colors$color <- as.character(p2colors$color)
 
-pcolors$ratio2<-c('1:5','1:10','1:20')
-p2colors$ratio2<-c('1:5','1:10','1:20')
+pcolors$ratio2<-c('1/5','1/10','1/20')
+p2colors$ratio2<-c('1/5','1/10','1/20')
 
 #figure 1
 #par(mfrow=c(1,2))
@@ -238,9 +238,8 @@ legend(x='topleft',legend=p3colors$ratio,col=p3colors$color,pch=16,bty = 'n',pt.
 abline(0,1)
 #points(pooling.c$ct1,pooling.c$ctp,col=alpha(pcolors$color[match(pooling.c$ratio,pcolors$ratio)],0.6),pch=16,cex=1.25,)
 library(car)
-residualPlot(mod4.l.400)
 
-plot(mod4.1.400)
+plot(mod.d.400)
 
 #testing log % change model - not for use as makes more sense for a different audience
 mod4.l.300 <- lm(log(ctp) ~  log(ct1) +as.factor(ratio), data=pooling2.c2)
@@ -270,7 +269,7 @@ impact$n1_p20 <- 0
 impact$n1_p20 <- impact$cdc_n1_ct +mod4.3.coef[1]+mod4.3.coef[3]
 
 impact.c <- impact[,c(1,4,10,11,12)]
-names(impact.c) <- c('Sample.ID','Undiluted','1:5','1:10','1:20')
+names(impact.c) <- c('Sample.ID','Undiluted','1/5','1/10','1/20')
 impact.m <- melt(impact.c,id.vars = c('Sample.ID'))
 names(impact.m) <- c('Sample.ID','condition','ct')
 impact.m$colorpal<-'#ff0000'
@@ -280,12 +279,12 @@ impact.m$colorpal[which(impact.m$condition=='1:20')]<-'#fcc1c1'
 
 #sensitivity summary plot
 library(ggplot2)
-(ggplot(data=impact.m, aes(x=condition,y=ct))+ #theme(text=element_text(size=10,family='Impact'))+
-    geom_rect(aes(ymin=38,ymax=Inf,xmin=-Inf,xmax=Inf),fill='#eec2c2')+
+((ggplot(data=impact.m[which(impact.m$ct<=45),], aes(x=condition,y=ct))+ #theme(text=element_text(size=10,family='Impact'))+
+    geom_rect(aes(ymin=38,ymax=45,xmin=-Inf,xmax=Inf),fill='#eec2c2')+
     geom_dotplot(binaxis='y',stackdir='center',aes(fill=condition),alpha=0.75,stackratio = 0.75,dotsize=1,binwidth = 0.5)+
- 
+  
   stat_summary(fun.data=mean_sdl, fun.args = list(mult=1), 
-               geom="pointrange", color="black",alpha=0.75)+
+               geom="pointrange", color="black",alpha=0.75))+
   scale_y_reverse()+  
   geom_hline(yintercept = 40,linetype='dashed')+ geom_hline(yintercept = 38))+
   #scale_fill_manual(values=c('#ff0000','#ff5448','#ff7d7d','#fcc1c1'))
@@ -294,10 +293,10 @@ library(ggplot2)
   ylab('Ct value (N1)')+
   labs(fill='Pooling Ratio')+
   theme_minimal(base_size = 10,base_family = 'Arial')+
-  annotate(geom='text',x=1,y=50,label='relative sensitivity:')+
-  annotate(geom='text',x=2,y=50,label='92.59%')+#,color='#27496a')+
-  annotate(geom='text',x=3,y=50,label='88.89%')+#,color='#85c4b9')+
-  annotate(geom='text',x=4,y=50,label='85.19%')#,color='#afd88d')
+  annotate(geom='text',x=1,y=12,label='relative sensitivity:')+
+  annotate(geom='text',x=2,y=12,label='92.59%')+#,color='#27496a')+
+  annotate(geom='text',x=3,y=12,label='88.89%')+#,color='#85c4b9')+
+  annotate(geom='text',x=4,y=12,label='85.19%')#,color='#afd88d')
 
 
 
@@ -313,11 +312,11 @@ ggplot(data=impact, aes(x=cdc_n1_ct,y=n1_p20))+
 
 #REG COEF RELATIVE SENSITIVITY
 (length(which(impact$cdc_n1_ct+mod4.3.coef[1]>38))-45)/135 #7.41
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]<=38)))/135 #92.59
+s5<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]<=38)))/135 #92.59
 (length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]>38))-45)/135 #11.11
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]<=38)))/135 #88.89
+s10<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]<=38)))/135 #88.89
 (length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]>38))-45)/135 #14.81
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]<=38)))/135 #85.19
+s20<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]<=38)))/135 #85.19
 
 #UPPER LIMIT
 (length(which(impact$cdc_n1_ct+3.046>38))-45)/135 #11.11
@@ -357,7 +356,7 @@ names(pbs1)<-c('sample','ct1','saliva','pbs','water')
 pbs.m<-melt(pbs1,id.vars = c('sample','ct1'))
 names(pbs.m)<-c('sample','ct1','condition','ctp')
 
-pbs.m$ctp[which(pbs.m$ctp>=42)]=42
+#pbs.m$ctp[which(pbs.m$ctp>=42)]=42
 
 pbs.m$condition<-as.factor(pbs.m$condition)
 pbs.m$ctp[which(pbs.m$ctp>40)] <- 40
@@ -383,7 +382,7 @@ confint(mod.me)
 
 #pooling rna
 rna<-read.csv('./data/pooling_rna.csv')
-rna<-rna[,-c(2)]
+rna<-rna[,-c(2)] #remove fresh to compare freeze thaw as unpooled
 rna.m<-melt(rna,id.vars = c('ID','Freeze.thaw'))
 rna.m$dct<-rna.m$value-rna.m$Freeze.thaw
 names(rna.m)<-c('ID','Freeze.thaw','ratio','pct','dct')

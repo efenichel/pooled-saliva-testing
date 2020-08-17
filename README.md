@@ -1,4 +1,4 @@
-# pooled-salvia-testing
+# pooled-saliva-testing
 This repo supports Watkins et al. "Pooling saliva samples to aid SARS-CoV-2 testing demands"
 
 The repo is organized into 
