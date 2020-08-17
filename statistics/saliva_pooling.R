@@ -181,7 +181,7 @@ coef300= coef(mod.d.300)
 vcov400= vcov(mod.d.400) 
 coef400= coef(mod.d.400)
 
-library(MASS)
+p_load(MASS)
 
 lm.ci.func <- function(mod.obj){
   samp1 <-
@@ -373,11 +373,11 @@ lm.ci.func(modp.d)
 #plot(pbs.m$ct1,pbs.m$ctp,col=pbs.m$condition)
 
 #TRY MIXED EFFECTS - very similar result to simpler model
-library(lme4)
+p_load(lme4)
 mod.me<-lmer(dct ~ as.factor(ratio) +(1|sample), data=pooling2.c)
 summary(mod.me)
-library(nlme)
-library(lmerTest)
+p_load(nlme)
+p_load(lmerTest)
 confint(mod.me)
 
 #pooling rna
