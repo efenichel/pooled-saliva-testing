@@ -381,7 +381,7 @@ p_load(lmerTest)
 confint(mod.me)
 
 #pooling rna
-rna<-read.csv('./data/pooling_rna.csv')
+rna<-read.csv('./data/pooling_rna.csv')  #if there is an error here check the file, there may be encoding issue with ID
 rna<-rna[,-c(2)] #remove fresh to compare freeze thaw as unpooled
 rna.m<-melt(rna,id.vars = c('ID','Freeze.thaw'))
 rna.m$dct<-rna.m$value-rna.m$Freeze.thaw
