@@ -2,8 +2,11 @@
 This repo supports Watkins et al. "Pooling saliva samples to aid SARS-CoV-2 testing demands"
 
 The repo is organized into 
-1. Statistical analysis
-2. Pooling analysis
+1. Statistical analysis, the code for the statistical analysis
+2. Pooling analysis, a wrapper to generate pooling figures and function code. 
+3. Data, which has the data from the experimental results
+
+Run paper_wrapper.R will reproduce paper results. Note, if there is an error check the encoding on the csv files. 
 
 
 
