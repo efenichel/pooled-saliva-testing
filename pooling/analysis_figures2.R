@@ -279,7 +279,7 @@ plot10k.pos.test.c <- ggplot() +
   geom_line(data = p.5.10k, aes(x = prevalence, y = 30*(-total.tests /pos.found   + 1/prevalence  )), color = '#27496a', size = 1.25) +
   labs( 
     x= "Prevalence",
-    y = "The reduction in the average cost \n per positive individual relative to \n individual tests, assuming $30 per test ")  +
+    y = "The reduction in the average cost \n per positive detected relative to \n individual tests, assuming $30 per test ")  +
   #ggtitle("population 10,000") +
   annotate(geom="text",x=0.125,y= 60 ,label="pool = 10",color="#85c4b9",  angle = -35) +
   annotate(geom="text",x=0.10,y= 52 ,label="pool = 20",color="#afd88d", angle = -45) +
@@ -293,9 +293,9 @@ plot10k.pos.test.c
 
 
 plot10k.pos.test.c.zoom <- ggplot() +
+  geom_line(data = p.5.10k, aes(x = prevalence, y = 30*(-total.tests /pos.found   + 1/prevalence  )), color = '#27496a', size = 1.25) +
   geom_line(data = p.10.10k, aes(x = prevalence, y = 30*(-total.tests / pos.found + 1/prevalence ) ), color = "#85c4b9", size = 1.25) +
   geom_line(data = p.20.10k, aes(x = prevalence, y = 30*(-total.tests /pos.found  + 1/prevalence  )), color = "#afd88d", size = 1.25) +
-  geom_line(data = p.5.10k, aes(x = prevalence, y = 30*(-total.tests /pos.found   + 1/prevalence  )), color = '#27496a', size = 1.25) +
   labs( 
     x= "",
     y = "")  +
@@ -314,7 +314,7 @@ plot10k.pos.test.c.zoom
 
 plot10k.pos.test.c +
   annotation_custom(ggplotGrob(
-    plot10k.pos.test.c.zoom), xmin = 0.10, xmax = 0.3, ymin = 50, ymax = 520)
+    plot10k.pos.test.c.zoom), xmin = 0.08, xmax = 0.32, ymin = 50, ymax = 520)
 
 
 
