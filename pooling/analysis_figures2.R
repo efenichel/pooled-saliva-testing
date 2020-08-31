@@ -76,7 +76,8 @@ p.10.10k.cil <- prev.results(10, 10000, other.data = pool.sen.cil)
 p.20.10k.cil <- prev.results(20, 10000, other.data = pool.sen.cil)
 
 
-
+#=====
+#Total test figure
 
 p.10.10.k.cis <-as.data.frame(cbind(p.10.10k.cil$prevalence, p.10.10k.cil$total.tests, p.10.10k.ciu$total.tests))
 colnames(p.10.10.k.cis) <- c("prevalence", "cil", "ciu")
@@ -108,7 +109,8 @@ plot10k <- ggplot() +
   #ggtitle("population 10,000") +
   theme_classic(base_size = 15) +
   geom_hline(yintercept = 10000, linetype = "solid", color = '#000000', size = 0.5) +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 10))
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 plot10k
 
 plot10k.zoom <- ggplot() +
@@ -134,7 +136,7 @@ plot10k.zoom <- ggplot() +
   scale_y_continuous(breaks = scales::pretty_breaks(n = 5), limits = c(0,7000))
 plot10k.zoom
 
-plot10k +
+fig3a <- plot10k +
   annotation_custom(ggplotGrob(plot10k.zoom), xmin = 0.10, xmax = 0.32, ymin = 0, ymax = 6000)
 
 
@@ -159,7 +161,8 @@ plot10k.undetected <- ggplot() +
   #ggtitle("population 10,000") +
   theme_classic(base_size = 15) +
   #geom_hline(yintercept = 10000, linetype = "solid", color = "red", size = 0.5) +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 10))
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
 
 
 plot10k.undetected
@@ -312,10 +315,18 @@ plot10k.pos.test.c.zoom
 
 
 
-plot10k.pos.test.c +
+fig3b <- plot10k.pos.test.c +
   annotation_custom(ggplotGrob(
     plot10k.pos.test.c.zoom), xmin = 0.08, xmax = 0.32, ymin = 50, ymax = 520)
 
 
 
+fig3 <- plot_grid(fig3a, fig3b, labels = c('A', 'B'))
 
+# png('G:/.shortcut-targets-by-id/100e5S6TewY8-o145tsIfy42OxYhs8Xfm/COVID-19/testing/Anne_et_al/fig3.png',
+#     width = 6, height = 6/1.618, units = 'in', res = 600 )
+# fig3
+# dev.off()
+
+
+#1.618
