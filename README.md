@@ -1,5 +1,6 @@
 # pooled-saliva-testing
 This repo supports Watkins et al. "Pooling saliva samples to aid SARS-CoV-2 testing demands"
+https://www.medrxiv.org/content/10.1101/2020.09.02.20183830v1 
 
 The repo is organized into 
 1. Statistical analysis, the code for the statistical analysis
