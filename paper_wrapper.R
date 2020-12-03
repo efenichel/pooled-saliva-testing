@@ -38,3 +38,15 @@ plot10k.pos.test.c +
 plot10k.pos.test +
   annotation_custom(ggplotGrob(plot10k.pos.test.zoom), xmin = 0.12, xmax = 0.32, 
                     ymin = -0.02, ymax = 0.15)
+
+#crossing point for positives per test
+#when 5 is better than 10
+pout <- which.min((p.5.10k$pos.found/p.5.10k$total.tests - p.10.10k$pos.found/p.10.10k$total.tests )^2)
+p.5.10k$prevalence[pout]
+
+#when 10 is better then 20 
+pout <- which.min((p.10.10k[1:300,]$pos.found/p.10.10k[1:300,]$total.tests - p.20.10k[1:300,]$pos.found/p.20.10k[1:300,]$total.tests )^2)
+p.10.10k$prevalence[pout]
+
+#prevalence for single testing. 
+p.5.10k$prevalence[which.min((p.5.10k$pos.found/p.5.10k$total.tests - p.5.10k$prevalence)^2)]
