@@ -277,28 +277,16 @@ impact.m$colorpal[which(impact.m$condition=='1:5')]<-'#ff5448'
 impact.m$colorpal[which(impact.m$condition=='1:10')]<-'#ff7d7d'
 impact.m$colorpal[which(impact.m$condition=='1:20')]<-'#fcc1c1'
 
-#REG COEF RELATIVE SENSITIVITY
-pos=length(which(impact$cdc_n1_ct<=40))
-tot=length(impact$cdc_n1_ct)
-neg=tot-pos
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]>40))-neg)/pos #14.74
-s5<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]<=40)))/pos #85.26
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]>40))-neg)/pos #17.31
-s10<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]<=40)))/pos #82.69
-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]>40))-neg)/pos #17.95
-s20<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]<=40)))/pos #82.05
-
-
 #sensitivity summary plot
 library(ggplot2)
-(ggplot(data=impact.m[which(impact.m$ct<=45),], aes(x=condition,y=ct))+ #theme(text=element_text(size=10,family='Impact'))+
-    geom_rect(aes(ymin=40,ymax=45,xmin=-Inf,xmax=Inf),fill='#eec2c2')+
+((ggplot(data=impact.m[which(impact.m$ct<=45),], aes(x=condition,y=ct))+ #theme(text=element_text(size=10,family='Impact'))+
+    geom_rect(aes(ymin=38,ymax=45,xmin=-Inf,xmax=Inf),fill='#eec2c2')+
     geom_dotplot(binaxis='y',stackdir='center',aes(fill=condition),alpha=0.75,stackratio = 0.75,dotsize=1,binwidth = 0.5)+
-  
-  stat_summary(fun.data=mean_sdl, fun.args = list(mult=1), 
-               geom="pointrange", color="black",alpha=0.75))+
-  scale_y_reverse()+  
-  geom_hline(yintercept = 40)+#,linetype='dashed')+ geom_hline(yintercept = 38))+
+    
+    stat_summary(fun.data=mean_sdl, fun.args = list(mult=1), 
+                 geom="pointrange", color="black",alpha=0.75))+
+    scale_y_reverse()+  
+    geom_hline(yintercept = 40,linetype='dashed')+ geom_hline(yintercept = 38))+
   #scale_fill_manual(values=c('#ff0000','#ff5448','#ff7d7d','#fcc1c1'))
   scale_fill_manual(values=c('#000000','#27496a','#85c4b9','#afd88d'))+  
   xlab('Pooling Ratio')+
@@ -306,9 +294,9 @@ library(ggplot2)
   labs(fill='Pooling Ratio')+
   theme_minimal(base_size = 10,base_family = 'Arial')+
   annotate(geom='text',x=1,y=12,label='relative sensitivity:')+
-  annotate(geom='text',x=2,y=12,label='85.26%')+#,color='#27496a')+
-  annotate(geom='text',x=3,y=12,label='82.69%')+#,color='#85c4b9')+
-  annotate(geom='text',x=4,y=12,label='82.05%')#,color='#afd88d')
+  annotate(geom='text',x=2,y=12,label='92.59%')+#,color='#27496a')+
+  annotate(geom='text',x=3,y=12,label='88.89%')+#,color='#85c4b9')+
+  annotate(geom='text',x=4,y=12,label='85.19%')#,color='#afd88d')
 
 
 
@@ -322,22 +310,28 @@ ggplot(data=impact, aes(x=cdc_n1_ct,y=n1_p20))+
   geom_hline(yintercept = 38-mod4.3.coef[1],color='blue')+geom_hline(yintercept = 38-mod4.3.coef[1]-mod4.3.coef[2],color='red')+
   geom_hline(yintercept = 38-mod4.3.coef[1]-mod4.3.coef[3],color='green')
 
+#REG COEF RELATIVE SENSITIVITY
+(length(which(impact$cdc_n1_ct+mod4.3.coef[1]>38))-45)/135 #7.41
+s5<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]<=38)))/135 #92.59
+(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]>38))-45)/135 #11.11
+s10<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[2]<=38)))/135 #88.89
+(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]>38))-45)/135 #14.81
+s20<-(length(which(impact$cdc_n1_ct+mod4.3.coef[1]+mod4.3.coef[3]<=38)))/135 #85.19
 
-
-#Lower LIMIT
-(length(which(impact$cdc_n1_ct+3.046>40))-neg)/pos #16.67
-s5_ll=(length(which(impact$cdc_n1_ct+3.046<=40)))/pos #83.33
-(length(which(impact$cdc_n1_ct+3.952>40))-neg)/pos #17.95
-s10_ll=(length(which(impact$cdc_n1_ct+3.952<=40)))/pos #82.05
-(length(which(impact$cdc_n1_ct+4.383>40))-neg)/pos #20.51
-s20_ll=(length(which(impact$cdc_n1_ct+4.383<=40)))/pos #79.49
-#Upper LIMIT
-(length(which(impact$cdc_n1_ct+1.398>40))-neg)/pos #9.62
-s5_ul=(length(which(impact$cdc_n1_ct+1.398<=40)))/pos #90.38
-(length(which(impact$cdc_n1_ct+2.306>40))-neg)/pos #14.74
-s10_ul=(length(which(impact$cdc_n1_ct+2.306<=40)))/pos #85.26
-(length(which(impact$cdc_n1_ct+2.747>40))-neg)/pos #16.03
-s20_ul=(length(which(impact$cdc_n1_ct+2.747<=40)))/pos #83.97
+#UPPER LIMIT
+(length(which(impact$cdc_n1_ct+3.046>38))-45)/135 #11.11
+(length(which(impact$cdc_n1_ct+3.046<=38)))/135 #88.89
+(length(which(impact$cdc_n1_ct+3.952>38))-45)/135 #20.00
+(length(which(impact$cdc_n1_ct+3.952<=38)))/135 #80.00
+(length(which(impact$cdc_n1_ct+4.383>38))-45)/135 #24.44
+(length(which(impact$cdc_n1_ct+4.383<=38)))/135 #75.56
+#LOWER LIMIT
+(length(which(impact$cdc_n1_ct+1.398>38))-45)/135 #4.44
+(length(which(impact$cdc_n1_ct+1.398<=38)))/135 #95.56
+(length(which(impact$cdc_n1_ct+2.306>38))-45)/135 #8.15
+(length(which(impact$cdc_n1_ct+2.306<=38)))/135 #91.85
+(length(which(impact$cdc_n1_ct+2.747>38))-45)/135 #8.89
+(length(which(impact$cdc_n1_ct+2.747<=38)))/135 #91.11
 
 #SENSITIVITY SUMMARY PLOT 2 UPPER BOUND
 ggplot(data=impact, aes(x=cdc_n1_ct,y=n1_p20))+
@@ -410,4 +404,3 @@ lm.ci.func1 <- function(mod.obj){
   return(res1)
 }
 lm.ci.func1(rna.mod)
-
