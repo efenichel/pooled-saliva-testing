@@ -27,8 +27,11 @@ wrapper.run <- TRUE
 source("pooling/analysis_figures2.R")
 
 #Make pooling plots
+
 plot10k +
   annotation_custom(ggplotGrob(plot10k.zoom), xmin = 0.10, xmax = 0.32, ymin = 0, ymax = 6000)
+
+
 
 plot10k.pos.test.c +
   annotation_custom(ggplotGrob(
@@ -50,3 +53,23 @@ p.10.10k$prevalence[pout]
 
 #prevalence for single testing. 
 p.5.10k$prevalence[which.min((p.5.10k$pos.found/p.5.10k$total.tests - p.5.10k$prevalence)^2)]
+
+
+p_load(cowplot)
+
+plot_grid(plot10k +
+            annotation_custom(ggplotGrob(plot10k.zoom), xmin = 0.10, xmax = 0.32, ymin = 0, ymax = 6000),
+          plot10k.pos.test.c +
+            annotation_custom(ggplotGrob(
+              plot10k.pos.test.c.zoom), xmin = 0.10, xmax = 0.3, ymin = 50, ymax = 520),
+          ncol = 1,
+          #align = c("v"),
+          #rel_heights = c(2, 2)
+          labels = c('A', 'B'),
+          label_x = 0, label_y = 0,
+          hjust = -0.5, vjust = -0.5
+          )
+ggsave('figs/figure2.pdf', scale = 1, units = "in", 
+       width = 5,
+       height = 1.618 * 5,
+       dpi = 300)
