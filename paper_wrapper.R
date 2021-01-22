@@ -62,17 +62,30 @@ dir.create('figs')
 
 plot_grid(plot10k +
             annotation_custom(ggplotGrob(plot10k.zoom), xmin = 0.10, xmax = 0.32, ymin = 0, ymax = 6000),
-          plot10k.pos.test.c +
+          ncol = 1,
+          #align = c("v"),
+          #rel_heights = c(2, 2)
+          labels = c('A'),
+          label_x = 0, label_y = 0,
+          hjust = -0.5, vjust = -33
+          )
+ggsave('figs/figure2a.pdf', scale = 1, units = "in", 
+       width = 5,
+       height = 5,  #1.618 is the golden ratio. 
+       dpi = 300)
+
+
+plot_grid(plot10k.pos.test.c +
             annotation_custom(ggplotGrob(
               plot10k.pos.test.c.zoom), xmin = 0.10, xmax = 0.3, ymin = 50, ymax = 520),
           ncol = 1,
           #align = c("v"),
           #rel_heights = c(2, 2)
-          labels = c('A', 'B'),
+          labels = c('B'),
           label_x = 0, label_y = 0,
-          hjust = -0.5, vjust = -0.5
-          )
-ggsave('figs/figure2.pdf', scale = 1, units = "in", 
+          hjust = -0.5, vjust = -33
+)
+ggsave('figs/figure2b.pdf', scale = 1, units = "in", 
        width = 5,
-       height = 1.618 * 5,  #1.618 is the golden ratio. 
+       height = 5,  #1.618 is the golden ratio. 
        dpi = 300)
