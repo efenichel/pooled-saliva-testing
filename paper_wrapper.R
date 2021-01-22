@@ -74,5 +74,5 @@ plot_grid(plot10k +
           )
 ggsave('figs/figure2.pdf', scale = 1, units = "in", 
        width = 5,
-       height = 1.618 * 5,
+       height = 1.618 * 5,  #1.618 is the golden ratio. 
        dpi = 300)
