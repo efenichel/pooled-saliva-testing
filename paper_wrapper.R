@@ -55,7 +55,10 @@ p.10.10k$prevalence[pout]
 p.5.10k$prevalence[which.min((p.5.10k$pos.found/p.5.10k$total.tests - p.5.10k$prevalence)^2)]
 
 
+#-------- SAVE FIGURE----------------------
 p_load(cowplot)
+
+dir.create('figs')
 
 plot_grid(plot10k +
             annotation_custom(ggplotGrob(plot10k.zoom), xmin = 0.10, xmax = 0.32, ymin = 0, ymax = 6000),
